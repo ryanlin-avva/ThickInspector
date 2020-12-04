@@ -207,7 +207,6 @@
             this.label7.Size = new System.Drawing.Size(130, 24);
             this.label7.TabIndex = 14;
             this.label7.Text = "Set Base File";
-            this.label7.Click += new System.EventHandler(this.label7_Click);
             // 
             // textBox2
             // 

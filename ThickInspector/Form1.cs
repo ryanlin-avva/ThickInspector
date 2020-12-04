@@ -21,14 +21,9 @@ namespace SInspector
         private string paramFileName = "C:\\avva\\raptor.ini";
         private string paramFolderName = "C:\\avva";
         private string baseFileName = "C:\\avva\\base.data";
-
         public string DataFolder { get; set; }
 
-        //Data Profile
-        //private int dataRowNum = 0; //資料筆數，i.e. Y軸總數量
-
         private int CurrentInspectPos { get; set; }
-        private int PreviousInspectPos { get; set; }
         private int PosMin { get; set; }
         private int PosMax { get; set; }
         private String DatafileName { get; set; }
@@ -170,7 +165,6 @@ namespace SInspector
             {
                 tbInspectPos.Text = value.ToString();
                 panel3D.Invalidate();
-                PreviousInspectPos = CurrentInspectPos;
                 CurrentInspectPos = value;
             }
         }
@@ -182,7 +176,6 @@ namespace SInspector
             {
                 if (value > PosMax) value = PosMax;
                 else if (value < PosMin) value = PosMin;
-                PreviousInspectPos = CurrentInspectPos;
                 CurrentInspectPos = value;
                 trkInspectPos.Value = value;
                 panel3D.Invalidate();
@@ -268,6 +261,12 @@ namespace SInspector
         {
             try
             {
+                if (ds.BaseZ==0)
+                {
+                    MessageBox.Show("Haven't set base data file yet!!");
+                    return;
+                }
+
                 initPath = fname;
                 using (StreamReader file = new StreamReader(fname))
                 {
@@ -280,6 +279,8 @@ namespace SInspector
                     xNumber = Convert.ToInt32(dataLine);
                     dataLine = file.ReadLine(); //scribe line is parallet to scan line
                     ds.ParallelDisplay = (Convert.ToInt32(dataLine) == 1) ? true : false;
+                    dataLine = file.ReadLine();
+                    ds.EncoderZ = Convert.ToInt32(dataLine)-ds.BaseZ;
                     if (!ds.ParallelDisplay)
                     {
                         cs3.YLabel = "X";
@@ -294,6 +295,12 @@ namespace SInspector
                     {
                         distance = Constants.DotDistance / 5;
                         xNumber = Constants.DotNumber * 5;
+                    }
+                    if (dataRowNum > ds.BaseRowNumber 
+                        || xNumber > ds.BaseColNumber)
+                    {
+                        MessageBox.Show("Base data area is smaller than sample");
+                        return;
                     }
                     if (ds.ParallelDisplay)
                     {
@@ -353,12 +360,12 @@ namespace SInspector
                         {
                             if (ds.ParallelDisplay)
                             {
-                                ds.SetZArray(z, i, data[z + 2]);
+                                ds.SetZArray(z, i, data[z + 2], data[0]);
                                 ds.SetInsArray(z, i, data[z + 2 + xNumber]);
                             }
                             else
                             {
-                                ds.SetZArray(i, z, data[z + 2]);
+                                ds.SetZArray(i, z, data[z + 2], data[0]);
                                 ds.SetInsArray(i, z, data[z + 2 + xNumber]);
                             }
                         }
@@ -397,12 +404,10 @@ namespace SInspector
                     dataLine = file.ReadLine(); //scan interval
                     xNumber = Convert.ToInt32(dataLine);
                     dataLine = file.ReadLine(); //scribe line is parallet to scan line
-                    ds.ParallelDisplay = (Convert.ToInt32(dataLine) == 1) ? true : false;
-                    if (!ds.ParallelDisplay)
-                    {
-                        cs3.YLabel = "X";
-                        cs3.XLabel = "Y";
-                    }
+                    //ds.ParallelDisplay = (Convert.ToInt32(dataLine) == 1) ? true : false;
+                    ds.ParallelDisplay = false; //Use vertical to display
+                    dataLine = file.ReadLine();
+                    ds.BaseZ = Convert.ToInt32(dataLine);
                     int distance = Constants.DotDistance;
                     if (xNumber == 5)
                     {
@@ -415,26 +420,15 @@ namespace SInspector
                     }
                     if (ds.ParallelDisplay)
                     {
-                        ds.ArraysAlloc(xNumber, dataRowNum);
+                        ds.BaseArrayAlloc(xNumber, dataRowNum);
                         for (int z = 0; z < xNumber; z++)
                         {
-                            ds.YArray[z] = z * distance;
-                        }
-                        for (int z = 0; z < dataRowNum; z++)
-                        {
-                            ds.XArray[z] = z;
+                            ds.BaseYArray[z] = z * distance;
                         }
                     }
                     else
                     {
                         ds.ArraysAlloc(dataRowNum, xNumber);
-                        for (int z = 0; z < xNumber; z++)
-                        {
-                            //xArray，等距 (5um) 排列
-                            ds.XArray[z] = z * distance;
-
-                        }
-                        yBase = 0;
                     }
 
                     for (int i = 0; i < dataRowNum; i++)
@@ -447,16 +441,10 @@ namespace SInspector
                             return;
                         }
                         float[] data = Array.ConvertAll(dataLine.Split(','), float.Parse);
-                        if (i == 0)
-                        {
-                            yBase = data[0];
-                            ds.YBase = yBase;
-                            ds.XBase = data[1];
-                        }
                         if (!ds.ParallelDisplay)
                         {
                             //以um為單位，起點為0
-                            ds.YArray[i] = data[0] - yBase;
+                            ds.BaseYArray[i] = data[0];
                         }
 
                         if (data.Length < xNumber + 2)
@@ -471,28 +459,16 @@ namespace SInspector
                         {
                             if (ds.ParallelDisplay)
                             {
-                                ds.SetZArray(z, i, data[z + 2]);
-                                ds.SetInsArray(z, i, data[z + 2 + xNumber]);
+                                ds.SetBaseZArray(z, i, data[z + 2]);
                             }
                             else
                             {
-                                ds.SetZArray(i, z, data[z + 2]);
-                                ds.SetInsArray(i, z, data[z + 2 + xNumber]);
+                                ds.SetBaseZArray(i, z, data[z + 2]);
                             }
                         }
                         if (i == 0) startPos = new PointF(data[0], data[1]);
                     }
-
-                    SetDataProfile();
-                    PosMin = (int)ds.YArray[0];
-                    PosMax = (int)ds.YArray[ds.YArray.Length - 1];
-                    lbStartPos.Text = String.Format("起始座標 ({0,8:F3}, {1,8:F3}) mm", startPos.X / 1000.0f, startPos.Y / 1000.0f);
-                    DrawTrackBar();
-                    for (int i = 0; i < dl_num; i++)
-                    {
-                        dl_array[i].Visible = false;
-                    }
-                    panel3D.Invalidate();
+                    ds.RemoveBaseZero();
                 }
             }
             catch (Exception e)
@@ -668,6 +644,7 @@ namespace SInspector
         private void Form1_Load(object sender, EventArgs e)
         {
             ReadParaFile();
+            LoadBaseFile(baseFileName);
             var args = Environment.GetCommandLineArgs();
             if (args.Length > 1)
             {
@@ -691,6 +668,8 @@ namespace SInspector
                 text = "FilteredDisplay:" + draw2.FilteredDisplay.ToString();
                 outputFile.WriteLine(text);
                 text = "DataSavePath:" + DataFolder;
+                outputFile.WriteLine(text);
+                text = "BaseFileName:" + baseFileName;
                 outputFile.WriteLine(text);
             }
         }
@@ -734,7 +713,9 @@ namespace SInspector
                         case "DataSavePath":
                             DataFolder = dataLine.Substring(idx + 1);
                             break;
-
+                        case "BaseFileName":
+                            baseFileName = dataLine.Substring(idx + 1);
+                            break;
                     }
                 }
             }

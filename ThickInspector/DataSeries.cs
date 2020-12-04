@@ -13,6 +13,8 @@ namespace SInspector
         public float Yspacing { get; set; }
         public int ColNumber { get; set; } //Real Number of Points in a row
         public int RowNumber { get; set; } //Real Number of rows
+        public int BaseColNumber { get; set; } //Real Number of Points in a row
+        public int BaseRowNumber { get; set; } //Real Number of rows
         public int DispColNumber { get; set; } //Display Number of Points in a row，最大為70點
         public int DispRowNumber { get; set; } //Display Number of rows，最大為70點
         private Point3[,] p3Array; //data array for display，[x, y]=[DispXnumber, DispYnumber]
@@ -21,14 +23,18 @@ namespace SInspector
         private float[,] nzData; //data array with zero removed
         private float[,] lpfData; //data array after low-pass filter
         private float[,] insData; //intensity array from input，[row, col]=[總筆數, 192(*5)]
+        private float[,] baseData; //data array as base
         public float[] XArray { get; set; } //length=192，value=[0, 970]，間隔=5
         public float[] YArray { get; set; } //length=input總筆數
+        public float[] BaseYArray { get; set; } //length=Base總筆數
         public float Zmin { get; set; }
         public float Zmax { get; set; }
         public float Zavg { get; set; }
         public float Zdistance { get; set; }
         public float XBase { get; set; }
         public float YBase { get; set; }
+        public int EncoderZ;
+        public int BaseZ;
         public bool ParallelDisplay { get; set; }
         public int Threshold = 120;
         public int CutoffFreq = 30;
@@ -38,9 +44,28 @@ namespace SInspector
         private int minIdx = 0;
         private int maxIdx = 0;
 
-        public void SetZArray(int r, int c, float v)
+        public void SetBaseZArray(int r, int c, float v)
         {
-            oriData[r,c] = v;
+            baseData[r,c] = v;
+        }
+        public void SetZArray(int r, int c, float v, int y)
+        {
+            int idx;
+            idx = r;
+            if (y != BaseYArray[r])
+            {
+                int start_idx = Math.Max(r - 3, 0);
+                int end_idx = Math.Min(r + 3, BaseYArray.Length);
+                for (int i = start_idx; i < end_idx; i++)
+                {
+                    if (y >= BaseYArray[r])
+                    {
+                        idx = r;
+                        break;
+                    }
+                }
+            }
+            oriData[r, c] = Math.Max(v - BaseYArray[idx] + EncoderZ, 0);
         }
         public void SetInsArray(int r, int c, float v)
         {
@@ -87,6 +112,52 @@ namespace SInspector
             ZdataStat();
             MakeP3Array();
             //SaveP3Array(datapath + ".p3");
+        }
+        public void RemoveBaseZero()
+        {
+            for (int i = 0; i < BaseRowNumber; i++)
+            {
+                int start_idx = 0;
+                int leading_zero = 0;
+                for (int z = 0; z < BaseColNumber; z++)
+                {
+                    if (baseData[i, z] != 0) break;
+                    leading_zero++;
+                }
+                if (leading_zero == ColNumber)
+                {
+                    for (int j = 0; j < ColNumber; j++)
+                    {
+                        baseData[i, j] = 0;
+                    }
+                    continue;
+                }
+                start_idx = leading_zero;
+                for (int j = start_idx + 1; j < ColNumber; j++)
+                {
+                    if (baseData[i, j] == 0 )
+                        continue;
+                    if (start_idx + 1 < j)
+                    {
+                        float inc = (baseData[i, j] - baseData[i, start_idx]) / (j - start_idx);
+                        float h = baseData[i, start_idx];
+                        for (int k = start_idx + 1; k < j; k++)
+                        {
+                            h += inc;
+                            baseData[i, k] = h;
+                        }
+                    }
+                    start_idx = j;
+                }
+                //remove starting zero
+                for (int j = 0; j < leading_zero; j++)
+                    baseData[i, j] = baseData[i, leading_zero];
+                //remove trailing zero
+                for (int j = start_idx + 1; j < ColNumber; j++)
+                {
+                    baseData[i, j] = baseData[i, start_idx];
+                }
+            }
         }
         private void CreateNoZeroArray()
         {
@@ -405,6 +476,13 @@ namespace SInspector
                         ? RowNumber : Constants.Draw3DYPointTotal;
             p3Array = new Point3[DispColNumber, DispRowNumber];
             p3ToReal = new Point[DispColNumber, DispRowNumber];
+        }
+        public void BaseArrayAlloc(int r, int c)
+        {
+            BaseColNumber = c;
+            BaseRowNumber = r;
+
+            baseData = new float[BaseRowNumber, BaseColNumber];
         }
     }
 }
