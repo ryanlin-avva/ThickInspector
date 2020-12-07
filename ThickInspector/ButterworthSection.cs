@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SInspector
+namespace ThickInspector
 {
     public class ButterworthSection
     {

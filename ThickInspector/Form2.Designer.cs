@@ -1,4 +1,4 @@
-﻿namespace SInspector
+﻿namespace ThickInspector
 {
     partial class Form2
     {

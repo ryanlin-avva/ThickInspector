@@ -1,5 +1,5 @@
 ﻿
-namespace SInspector
+namespace ThickInspector
 {
     public class LowpassButterworth
     {

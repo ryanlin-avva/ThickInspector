@@ -5,7 +5,7 @@ using System.Text;
 using System.Diagnostics;
 using System;
 
-namespace SInspector
+namespace ThickInspector
 {
     class DataSeries
     {
@@ -24,9 +24,9 @@ namespace SInspector
         private float[,] lpfData; //data array after low-pass filter
         private float[,] insData; //intensity array from input，[row, col]=[總筆數, 192(*5)]
         private float[,] baseData; //data array as base
-        public float[] XArray { get; set; } //length=192，value=[0, 970]，間隔=5
-        public float[] YArray { get; set; } //length=input總筆數
-        public float[] BaseYArray { get; set; } //length=Base總筆數
+        public int[] XArray { get; set; } //length=192，value=[0, 970]，間隔=5
+        public int[] YArray { get; set; } //length=input總筆數
+        public int[] BaseYArray { get; set; } //length=Base總筆數
         public float Zmin { get; set; }
         public float Zmax { get; set; }
         public float Zavg { get; set; }
@@ -65,7 +65,7 @@ namespace SInspector
                     }
                 }
             }
-            oriData[r, c] = Math.Max(v - BaseYArray[idx] + EncoderZ, 0);
+            oriData[r, c] = Math.Max(v - baseData[r, c] + EncoderZ, 0);
         }
         public void SetInsArray(int r, int c, float v)
         {
@@ -124,16 +124,16 @@ namespace SInspector
                     if (baseData[i, z] != 0) break;
                     leading_zero++;
                 }
-                if (leading_zero == ColNumber)
+                if (leading_zero == BaseColNumber)
                 {
-                    for (int j = 0; j < ColNumber; j++)
+                    for (int j = 0; j < BaseColNumber; j++)
                     {
                         baseData[i, j] = 0;
                     }
                     continue;
                 }
                 start_idx = leading_zero;
-                for (int j = start_idx + 1; j < ColNumber; j++)
+                for (int j = start_idx + 1; j < BaseColNumber; j++)
                 {
                     if (baseData[i, j] == 0 )
                         continue;
@@ -149,11 +149,13 @@ namespace SInspector
                     }
                     start_idx = j;
                 }
+                //leading_zero substract one if out of range
+                if (leading_zero >= BaseColNumber) leading_zero = BaseColNumber - 1;
                 //remove starting zero
                 for (int j = 0; j < leading_zero; j++)
                     baseData[i, j] = baseData[i, leading_zero];
                 //remove trailing zero
-                for (int j = start_idx + 1; j < ColNumber; j++)
+                for (int j = start_idx + 1; j < BaseColNumber; j++)
                 {
                     baseData[i, j] = baseData[i, start_idx];
                 }
@@ -167,7 +169,7 @@ namespace SInspector
                 int leading_zero = 0;
                 for (int z = 0; z < ColNumber; z++)
                 {
-                    if (nzData[i, z] != 0 || insData[i, z] >= Threshold) break;
+                    if (oriData[i, z] != 0 && insData[i, z] > Threshold) break;
                     leading_zero++;
                 }
                 if (leading_zero == ColNumber)
@@ -197,6 +199,7 @@ namespace SInspector
                     nzData[i, j] = oriData[i, j];
                     start_idx = j;
                 }
+                if (leading_zero >= ColNumber) leading_zero = ColNumber - 1;
                 //remove starting zero
                 for (int j = 0; j < leading_zero; j++)
                     nzData[i, j] = oriData[i, leading_zero];
@@ -436,10 +439,6 @@ namespace SInspector
                         zmaxIndexList.Clear();
                         zmaxIndexList.Add(j);
                     } 
-                    else if (Zmax == nzData[j, i])
-                    {
-                        zmaxIndexList.Add(j);
-                    }
                     if (nzData[j, i] == 0) continue;
                     if (Zmin > nzData[j,i])
                     {
@@ -447,13 +446,31 @@ namespace SInspector
                         zminIndexList.Clear();
                         zminIndexList.Add(j);
                     }
-                    else if (Zmin == nzData[j, i])
-                    {
-                        zminIndexList.Add(j);
-                    }
                     sum += nzData[j,i];
                 }
             }
+            //Handle horizontal line case
+            if (Zmin == Zmax)
+            {
+                Zmin = Zmin - 0.5F;
+                Zmax = Zmax + 0.5F;
+            } 
+            else
+            {
+                for (int j = 0; j < RowNumber; j++)
+                    for (int i = 0; i < ColNumber; i++)
+                    {
+                        if (Zmax == nzData[j, i])
+                        {
+                            zmaxIndexList.Add(j);
+                        }
+                        if (Zmin == nzData[j, i])
+                        {
+                            zminIndexList.Add(j);
+                        }
+                    }
+            }
+
             Zavg = sum / (ColNumber * RowNumber);
             Zdistance = Zmax - Zmin;
         }
@@ -467,8 +484,8 @@ namespace SInspector
             nzData = new float[RowNumber, ColNumber];
             lpfData = new float[RowNumber, ColNumber];
             insData = new float[RowNumber, ColNumber];
-            XArray = new float[ColNumber];
-            YArray = new float[RowNumber];
+            XArray = new int[ColNumber];
+            YArray = new int[RowNumber];
 
             DispColNumber = (Constants.Draw3DXPointTotal > ColNumber)
                         ? ColNumber : Constants.Draw3DXPointTotal;
@@ -483,6 +500,7 @@ namespace SInspector
             BaseRowNumber = r;
 
             baseData = new float[BaseRowNumber, BaseColNumber];
+            BaseYArray = new int[BaseRowNumber];
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace SInspector
+﻿namespace ThickInspector
 {
     partial class Form1
     {
@@ -40,25 +40,28 @@
             this.btnGreen = new System.Windows.Forms.Button();
             this.tbGreenLength = new System.Windows.Forms.Label();
             this.tbBlueLength = new System.Windows.Forms.Label();
+            this.panel3D = new ThickInspector.DoubleBufferPanel();
+            this.tbStep = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.panel2D = new ThickInspector.DoubleBufferPanel();
             this.tblRight = new System.Windows.Forms.TableLayoutPanel();
             this.tblLeftLower = new System.Windows.Forms.TableLayoutPanel();
             this.tblStatistics = new System.Windows.Forms.TableLayoutPanel();
             this.btnMax = new System.Windows.Forms.Button();
             this.btnMin = new System.Windows.Forms.Button();
-            this.btnLoad = new System.Windows.Forms.Button();
             this.lbAvg = new System.Windows.Forms.Label();
             this.lbMax = new System.Windows.Forms.Label();
             this.lbMin = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.btnLoad = new System.Windows.Forms.Button();
             this.btnSetParam = new System.Windows.Forms.Button();
             this.lbStartPos = new System.Windows.Forms.Label();
-            this.tbStep = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.tblWhole.SuspendLayout();
             this.tblLeft.SuspendLayout();
             this.tblTrackBar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkInspectPos)).BeginInit();
             this.tblRightButton.SuspendLayout();
+            this.panel3D.SuspendLayout();
             this.tblRight.SuspendLayout();
             this.tblLeftLower.SuspendLayout();
             this.tblStatistics.SuspendLayout();
@@ -94,6 +97,8 @@
             this.tblLeft.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tblLeft.Controls.Add(this.tblTrackBar, 0, 1);
             this.tblLeft.Controls.Add(this.tblRightButton, 0, 3);
+            this.tblLeft.Controls.Add(this.panel3D, 0, 0);
+            this.tblLeft.Controls.Add(this.panel2D, 0, 2);
             this.tblLeft.Location = new System.Drawing.Point(3, 2);
             this.tblLeft.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tblLeft.Name = "tblLeft";
@@ -165,6 +170,7 @@
             this.btnRight.FlatAppearance.BorderColor = System.Drawing.Color.White;
             this.btnRight.FlatAppearance.BorderSize = 0;
             this.btnRight.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRight.Image = global::ThickInspector.Properties.Resources.icon_right;
             this.btnRight.Location = new System.Drawing.Point(1094, 0);
             this.btnRight.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
             this.btnRight.Name = "btnRight";
@@ -178,6 +184,7 @@
             this.btnLeft.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnLeft.FlatAppearance.BorderSize = 0;
             this.btnLeft.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLeft.Image = global::ThickInspector.Properties.Resources.icon_left;
             this.btnLeft.Location = new System.Drawing.Point(75, 0);
             this.btnLeft.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
             this.btnLeft.Name = "btnLeft";
@@ -261,6 +268,50 @@
             this.tbBlueLength.Name = "tbBlueLength";
             this.tbBlueLength.Size = new System.Drawing.Size(231, 28);
             this.tbBlueLength.TabIndex = 2;
+            // 
+            // panel3D
+            // 
+            this.panel3D.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel3D.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel3D.Controls.Add(this.tbStep);
+            this.panel3D.Controls.Add(this.label3);
+            this.panel3D.Location = new System.Drawing.Point(3, 3);
+            this.panel3D.Name = "panel3D";
+            this.panel3D.Size = new System.Drawing.Size(1363, 246);
+            this.panel3D.TabIndex = 2;
+            // 
+            // tbStep
+            // 
+            this.tbStep.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.tbStep.Location = new System.Drawing.Point(39, 219);
+            this.tbStep.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tbStep.Name = "tbStep";
+            this.tbStep.Size = new System.Drawing.Size(45, 25);
+            this.tbStep.TabIndex = 1;
+            this.tbStep.Text = "10";
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(3, 222);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(32, 15);
+            this.label3.TabIndex = 0;
+            this.label3.Text = "Step";
+            // 
+            // panel2D
+            // 
+            this.panel2D.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel2D.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel2D.Location = new System.Drawing.Point(3, 300);
+            this.panel2D.Name = "panel2D";
+            this.panel2D.Size = new System.Drawing.Size(1363, 269);
+            this.panel2D.TabIndex = 3;
             // 
             // tblRight
             // 
@@ -359,21 +410,6 @@
             this.btnMin.UseVisualStyleBackColor = true;
             this.btnMin.Click += new System.EventHandler(this.btnMin_Click);
             // 
-            // btnLoad
-            // 
-            this.btnLoad.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnLoad.Font = new System.Drawing.Font("Cambria", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLoad.Location = new System.Drawing.Point(5, 467);
-            this.btnLoad.Margin = new System.Windows.Forms.Padding(5);
-            this.btnLoad.Name = "btnLoad";
-            this.btnLoad.Size = new System.Drawing.Size(115, 62);
-            this.btnLoad.TabIndex = 3;
-            this.btnLoad.Text = "Load";
-            this.btnLoad.UseVisualStyleBackColor = true;
-            this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
-            // 
             // lbAvg
             // 
             this.lbAvg.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -431,6 +467,21 @@
             this.label1.Text = "Average";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // btnLoad
+            // 
+            this.btnLoad.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnLoad.Font = new System.Drawing.Font("Cambria", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLoad.Location = new System.Drawing.Point(5, 467);
+            this.btnLoad.Margin = new System.Windows.Forms.Padding(5);
+            this.btnLoad.Name = "btnLoad";
+            this.btnLoad.Size = new System.Drawing.Size(115, 62);
+            this.btnLoad.TabIndex = 3;
+            this.btnLoad.Text = "Load";
+            this.btnLoad.UseVisualStyleBackColor = true;
+            this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
+            // 
             // btnSetParam
             // 
             this.btnSetParam.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -457,26 +508,6 @@
             this.lbStartPos.Text = "起始座標 (0.000, 0.000) mm";
             this.lbStartPos.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // tbStep
-            // 
-            this.tbStep.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tbStep.Location = new System.Drawing.Point(39, 219);
-            this.tbStep.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tbStep.Name = "tbStep";
-            this.tbStep.Size = new System.Drawing.Size(45, 25);
-            this.tbStep.TabIndex = 1;
-            this.tbStep.Text = "10";
-            // 
-            // label2
-            // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 222);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(31, 14);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "Step";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -495,6 +526,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.trkInspectPos)).EndInit();
             this.tblRightButton.ResumeLayout(false);
             this.tblRightButton.PerformLayout();
+            this.panel3D.ResumeLayout(false);
+            this.panel3D.PerformLayout();
             this.tblRight.ResumeLayout(false);
             this.tblLeftLower.ResumeLayout(false);
             this.tblLeftLower.PerformLayout();
@@ -513,8 +546,6 @@
         private System.Windows.Forms.TableLayoutPanel tblTrackBar;
         private System.Windows.Forms.TrackBar trkInspectPos;
         private System.Windows.Forms.TextBox tbInspectPos;
-        private DoubleBufferPanel panel3D;
-        private DoubleBufferPanel panel2D;
         private System.Windows.Forms.TableLayoutPanel tblRightButton;
         private System.Windows.Forms.Button btnGreen;
         private System.Windows.Forms.Button btnBlue;
@@ -531,10 +562,14 @@
         private System.Windows.Forms.Button btnRight;
         private System.Windows.Forms.Button btnLeft;
         private System.Windows.Forms.TextBox tbStep;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label tbGreenLength;
         private System.Windows.Forms.Label lbStartPos;
         private System.Windows.Forms.Button btnSetParam;
+        //private System.Windows.Forms.Panel panel3D;
+        //private System.Windows.Forms.Panel panel2D;
+        private DoubleBufferPanel panel3D;
+        private DoubleBufferPanel panel2D;
+        private System.Windows.Forms.Label label3;
     }
 }
 

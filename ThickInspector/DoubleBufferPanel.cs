@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace SInspector
+namespace ThickInspector
 {
     class DoubleBufferPanel:Panel
     {

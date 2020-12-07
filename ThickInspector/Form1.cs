@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
 
-namespace SInspector
+namespace ThickInspector
 {
     public partial class Form1 : Form
     {
@@ -259,8 +259,8 @@ namespace SInspector
 
         private void LoadDataFile(string fname)
         {
-            try
-            {
+            //try
+            //{
                 if (ds.BaseZ==0)
                 {
                     MessageBox.Show("Haven't set base data file yet!!");
@@ -345,7 +345,7 @@ namespace SInspector
                         if (!ds.ParallelDisplay)
                         {
                             //以um為單位，起點為0
-                            ds.YArray[i] = data[0] - yBase;
+                            ds.YArray[i] = (int)(data[0] - yBase);
                         }
 
                         if (data.Length < xNumber + 2)
@@ -360,12 +360,12 @@ namespace SInspector
                         {
                             if (ds.ParallelDisplay)
                             {
-                                ds.SetZArray(z, i, data[z + 2], data[0]);
+                                ds.SetZArray(z, i, data[z + 2], (int)data[0]);
                                 ds.SetInsArray(z, i, data[z + 2 + xNumber]);
                             }
                             else
                             {
-                                ds.SetZArray(i, z, data[z + 2], data[0]);
+                                ds.SetZArray(i, z, data[z + 2], (int)data[0]);
                                 ds.SetInsArray(i, z, data[z + 2 + xNumber]);
                             }
                         }
@@ -383,16 +383,16 @@ namespace SInspector
                     }
                     panel3D.Invalidate();
                 }
-        }
-            catch (Exception e)
-            {
-                MessageBox.Show(fname + " Open Fail: " + e.Message);
-            }
+        //}
+        //    catch (Exception e)
+        //    {
+        //        MessageBox.Show(fname + " Open Fail: " + e.Message);
+        //    }
         }
         private void LoadBaseFile(string fname)
         {
-            try
-            {
+            //try
+            //{
                 initPath = fname;
                 using (StreamReader file = new StreamReader(fname))
                 {
@@ -428,7 +428,7 @@ namespace SInspector
                     }
                     else
                     {
-                        ds.ArraysAlloc(dataRowNum, xNumber);
+                        ds.BaseArrayAlloc(dataRowNum, xNumber);
                     }
 
                     for (int i = 0; i < dataRowNum; i++)
@@ -444,7 +444,7 @@ namespace SInspector
                         if (!ds.ParallelDisplay)
                         {
                             //以um為單位，起點為0
-                            ds.BaseYArray[i] = data[0];
+                            ds.BaseYArray[i] = (int)data[0];
                         }
 
                         if (data.Length < xNumber + 2)
@@ -466,15 +466,14 @@ namespace SInspector
                                 ds.SetBaseZArray(i, z, data[z + 2]);
                             }
                         }
-                        if (i == 0) startPos = new PointF(data[0], data[1]);
                     }
                     ds.RemoveBaseZero();
                 }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(fname + " Open Fail: " + e.Message);
-            }
+            //}
+            //catch (Exception e)
+            //{
+            //    MessageBox.Show(fname + " Open Fail: " + e.Message);
+            //}
         }
 
         private void SetDataProfile()

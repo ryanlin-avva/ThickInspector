@@ -4,7 +4,7 @@ using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using System.Diagnostics;
 
-namespace SInspector
+namespace ThickInspector
 {
     //因為是Z軸定點的橫剖面
     //所以Z軸使用的是Z座標

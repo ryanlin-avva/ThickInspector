@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SInspector.Properties
+namespace ThickInspector.Properties
 {
 
 

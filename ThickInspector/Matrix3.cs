@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SInspector
+namespace ThickInspector
 {
     class Matrix3
     {
