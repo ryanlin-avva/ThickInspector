@@ -33,17 +33,13 @@
             this.tblTrackBar = new System.Windows.Forms.TableLayoutPanel();
             this.tbInspectPos = new System.Windows.Forms.TextBox();
             this.trkInspectPos = new System.Windows.Forms.TrackBar();
-            this.btnRight = new System.Windows.Forms.Button();
-            this.btnLeft = new System.Windows.Forms.Button();
             this.tblRightButton = new System.Windows.Forms.TableLayoutPanel();
             this.btnBlue = new System.Windows.Forms.Button();
             this.btnGreen = new System.Windows.Forms.Button();
             this.tbGreenLength = new System.Windows.Forms.Label();
             this.tbBlueLength = new System.Windows.Forms.Label();
-            this.panel3D = new ThickInspector.DoubleBufferPanel();
-            this.tbStep = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.panel2D = new ThickInspector.DoubleBufferPanel();
+            this.lb_ttv = new System.Windows.Forms.Label();
+            this.tbTTV = new System.Windows.Forms.Label();
             this.tblRight = new System.Windows.Forms.TableLayoutPanel();
             this.tblLeftLower = new System.Windows.Forms.TableLayoutPanel();
             this.tblStatistics = new System.Windows.Forms.TableLayoutPanel();
@@ -56,15 +52,21 @@
             this.btnLoad = new System.Windows.Forms.Button();
             this.btnSetParam = new System.Windows.Forms.Button();
             this.lbStartPos = new System.Windows.Forms.Label();
+            this.btnRight = new System.Windows.Forms.Button();
+            this.btnLeft = new System.Windows.Forms.Button();
+            this.panel3D = new ThickInspector.DoubleBufferPanel();
+            this.tbStep = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.panel2D = new ThickInspector.DoubleBufferPanel();
             this.tblWhole.SuspendLayout();
             this.tblLeft.SuspendLayout();
             this.tblTrackBar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkInspectPos)).BeginInit();
             this.tblRightButton.SuspendLayout();
-            this.panel3D.SuspendLayout();
             this.tblRight.SuspendLayout();
             this.tblLeftLower.SuspendLayout();
             this.tblStatistics.SuspendLayout();
+            this.panel3D.SuspendLayout();
             this.SuspendLayout();
             // 
             // tblWhole
@@ -103,10 +105,10 @@
             this.tblLeft.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tblLeft.Name = "tblLeft";
             this.tblLeft.RowCount = 4;
-            this.tblLeft.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 39.64666F));
-            this.tblLeft.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.108434F));
-            this.tblLeft.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 43.25301F));
-            this.tblLeft.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.911664F));
+            this.tblLeft.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25.48435F));
+            this.tblLeft.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 4.96771F));
+            this.tblLeft.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 64.58023F));
+            this.tblLeft.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 4.96771F));
             this.tblLeft.Size = new System.Drawing.Size(1369, 637);
             this.tblLeft.TabIndex = 0;
             // 
@@ -125,12 +127,12 @@
             this.tblTrackBar.Controls.Add(this.trkInspectPos, 1, 0);
             this.tblTrackBar.Controls.Add(this.btnRight, 2, 0);
             this.tblTrackBar.Controls.Add(this.btnLeft, 0, 0);
-            this.tblTrackBar.Location = new System.Drawing.Point(3, 254);
+            this.tblTrackBar.Location = new System.Drawing.Point(3, 164);
             this.tblTrackBar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tblTrackBar.Name = "tblTrackBar";
             this.tblTrackBar.RowCount = 1;
             this.tblTrackBar.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tblTrackBar.Size = new System.Drawing.Size(1363, 41);
+            this.tblTrackBar.Size = new System.Drawing.Size(1363, 27);
             this.tblTrackBar.TabIndex = 1;
             // 
             // tbInspectPos
@@ -157,61 +159,37 @@
             this.trkInspectPos.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.trkInspectPos.Maximum = 2000;
             this.trkInspectPos.Name = "trkInspectPos";
-            this.trkInspectPos.Size = new System.Drawing.Size(963, 37);
+            this.trkInspectPos.Size = new System.Drawing.Size(963, 23);
             this.trkInspectPos.SmallChange = 5;
             this.trkInspectPos.TabIndex = 0;
             this.trkInspectPos.TickFrequency = 100;
             this.trkInspectPos.Value = 1000;
             this.trkInspectPos.Scroll += new System.EventHandler(this.trkInspectPos_Scroll);
             // 
-            // btnRight
-            // 
-            this.btnRight.BackColor = System.Drawing.SystemColors.Window;
-            this.btnRight.FlatAppearance.BorderColor = System.Drawing.Color.White;
-            this.btnRight.FlatAppearance.BorderSize = 0;
-            this.btnRight.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRight.Image = global::ThickInspector.Properties.Resources.icon_right;
-            this.btnRight.Location = new System.Drawing.Point(1094, 0);
-            this.btnRight.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
-            this.btnRight.Name = "btnRight";
-            this.btnRight.Size = new System.Drawing.Size(43, 41);
-            this.btnRight.TabIndex = 4;
-            this.btnRight.UseVisualStyleBackColor = false;
-            this.btnRight.Click += new System.EventHandler(this.btnRight_Click);
-            // 
-            // btnLeft
-            // 
-            this.btnLeft.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnLeft.FlatAppearance.BorderSize = 0;
-            this.btnLeft.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLeft.Image = global::ThickInspector.Properties.Resources.icon_left;
-            this.btnLeft.Location = new System.Drawing.Point(75, 0);
-            this.btnLeft.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
-            this.btnLeft.Name = "btnLeft";
-            this.btnLeft.Size = new System.Drawing.Size(44, 41);
-            this.btnLeft.TabIndex = 5;
-            this.btnLeft.UseVisualStyleBackColor = true;
-            this.btnLeft.Click += new System.EventHandler(this.btnLeft_Click);
-            // 
             // tblRightButton
             // 
             this.tblRightButton.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.tblRightButton.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.tblRightButton.ColumnCount = 5;
-            this.tblRightButton.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10.92404F));
-            this.tblRightButton.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 36.29005F));
-            this.tblRightButton.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 5.57184F));
-            this.tblRightButton.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10.92404F));
-            this.tblRightButton.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 36.29005F));
+            this.tblRightButton.ColumnCount = 8;
+            this.tblRightButton.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 7F));
+            this.tblRightButton.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tblRightButton.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 5F));
+            this.tblRightButton.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 7F));
+            this.tblRightButton.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tblRightButton.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            this.tblRightButton.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 8F));
+            this.tblRightButton.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 23F));
             this.tblRightButton.Controls.Add(this.btnBlue, 0, 0);
             this.tblRightButton.Controls.Add(this.btnGreen, 3, 0);
             this.tblRightButton.Controls.Add(this.tbGreenLength, 4, 0);
             this.tblRightButton.Controls.Add(this.tbBlueLength, 1, 0);
-            this.tblRightButton.Location = new System.Drawing.Point(351, 580);
+            this.tblRightButton.Controls.Add(this.lb_ttv, 6, 0);
+            this.tblRightButton.Controls.Add(this.tbTTV, 7, 0);
+            this.tblRightButton.Location = new System.Drawing.Point(261, 607);
             this.tblRightButton.Name = "tblRightButton";
             this.tblRightButton.RowCount = 1;
             this.tblRightButton.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tblRightButton.Size = new System.Drawing.Size(666, 48);
+            this.tblRightButton.Size = new System.Drawing.Size(847, 27);
             this.tblRightButton.TabIndex = 1;
             // 
             // btnBlue
@@ -222,10 +200,10 @@
             this.btnBlue.AutoSize = true;
             this.btnBlue.BackColor = System.Drawing.SystemColors.MenuHighlight;
             this.btnBlue.Font = new System.Drawing.Font("Cambria", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnBlue.Location = new System.Drawing.Point(5, 5);
-            this.btnBlue.Margin = new System.Windows.Forms.Padding(5);
+            this.btnBlue.Location = new System.Drawing.Point(5, 0);
+            this.btnBlue.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.btnBlue.Name = "btnBlue";
-            this.btnBlue.Size = new System.Drawing.Size(62, 38);
+            this.btnBlue.Size = new System.Drawing.Size(49, 27);
             this.btnBlue.TabIndex = 0;
             this.btnBlue.UseVisualStyleBackColor = false;
             this.btnBlue.Click += new System.EventHandler(this.btnBlue_Click);
@@ -237,10 +215,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btnGreen.BackColor = System.Drawing.Color.DarkGreen;
             this.btnGreen.Font = new System.Drawing.Font("Cambria", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnGreen.Location = new System.Drawing.Point(355, 5);
-            this.btnGreen.Margin = new System.Windows.Forms.Padding(5);
+            this.btnGreen.Location = new System.Drawing.Point(275, 0);
+            this.btnGreen.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.btnGreen.Name = "btnGreen";
-            this.btnGreen.Size = new System.Drawing.Size(62, 38);
+            this.btnGreen.Size = new System.Drawing.Size(49, 27);
             this.btnGreen.TabIndex = 1;
             this.btnGreen.UseVisualStyleBackColor = false;
             this.btnGreen.Click += new System.EventHandler(this.btnGreen_Click);
@@ -250,68 +228,57 @@
             this.tbGreenLength.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbGreenLength.Font = new System.Drawing.Font("Cambria", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbGreenLength.Location = new System.Drawing.Point(427, 15);
-            this.tbGreenLength.Margin = new System.Windows.Forms.Padding(5, 15, 5, 5);
+            this.tbGreenLength.Font = new System.Drawing.Font("Cambria", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbGreenLength.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.tbGreenLength.Location = new System.Drawing.Point(334, 5);
+            this.tbGreenLength.Margin = new System.Windows.Forms.Padding(5);
             this.tbGreenLength.Name = "tbGreenLength";
-            this.tbGreenLength.Size = new System.Drawing.Size(234, 28);
+            this.tbGreenLength.Size = new System.Drawing.Size(159, 17);
             this.tbGreenLength.TabIndex = 3;
+            this.tbGreenLength.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // tbBlueLength
             // 
             this.tbBlueLength.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbBlueLength.Font = new System.Drawing.Font("Cambria", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbBlueLength.Location = new System.Drawing.Point(77, 15);
-            this.tbBlueLength.Margin = new System.Windows.Forms.Padding(5, 15, 5, 5);
+            this.tbBlueLength.Font = new System.Drawing.Font("Cambria", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbBlueLength.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.tbBlueLength.Location = new System.Drawing.Point(64, 5);
+            this.tbBlueLength.Margin = new System.Windows.Forms.Padding(5);
             this.tbBlueLength.Name = "tbBlueLength";
-            this.tbBlueLength.Size = new System.Drawing.Size(231, 28);
+            this.tbBlueLength.Size = new System.Drawing.Size(159, 17);
             this.tbBlueLength.TabIndex = 2;
+            this.tbBlueLength.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // panel3D
+            // lb_ttv
             // 
-            this.panel3D.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.lb_ttv.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel3D.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel3D.Controls.Add(this.tbStep);
-            this.panel3D.Controls.Add(this.label3);
-            this.panel3D.Location = new System.Drawing.Point(3, 3);
-            this.panel3D.Name = "panel3D";
-            this.panel3D.Size = new System.Drawing.Size(1363, 246);
-            this.panel3D.TabIndex = 2;
+            this.lb_ttv.AutoSize = true;
+            this.lb_ttv.Font = new System.Drawing.Font("Cambria", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lb_ttv.ForeColor = System.Drawing.Color.Maroon;
+            this.lb_ttv.Location = new System.Drawing.Point(585, 0);
+            this.lb_ttv.Name = "lb_ttv";
+            this.lb_ttv.Size = new System.Drawing.Size(61, 27);
+            this.lb_ttv.TabIndex = 4;
+            this.lb_ttv.Text = "TTV";
+            this.lb_ttv.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // tbStep
+            // tbTTV
             // 
-            this.tbStep.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tbStep.Location = new System.Drawing.Point(39, 219);
-            this.tbStep.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tbStep.Name = "tbStep";
-            this.tbStep.Size = new System.Drawing.Size(45, 25);
-            this.tbStep.TabIndex = 1;
-            this.tbStep.Text = "10";
-            // 
-            // label3
-            // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 222);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(32, 15);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "Step";
-            // 
-            // panel2D
-            // 
-            this.panel2D.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.tbTTV.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel2D.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel2D.Location = new System.Drawing.Point(3, 300);
-            this.panel2D.Name = "panel2D";
-            this.panel2D.Size = new System.Drawing.Size(1363, 269);
-            this.panel2D.TabIndex = 3;
+            this.tbTTV.Font = new System.Drawing.Font("Cambria", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbTTV.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.tbTTV.Location = new System.Drawing.Point(654, 5);
+            this.tbTTV.Margin = new System.Windows.Forms.Padding(5);
+            this.tbTTV.Name = "tbTTV";
+            this.tbTTV.Size = new System.Drawing.Size(188, 17);
+            this.tbTTV.TabIndex = 5;
+            this.tbTTV.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // tblRight
             // 
@@ -508,6 +475,82 @@
             this.lbStartPos.Text = "起始座標 (0.000, 0.000) mm";
             this.lbStartPos.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // btnRight
+            // 
+            this.btnRight.BackColor = System.Drawing.SystemColors.Window;
+            this.btnRight.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.btnRight.FlatAppearance.BorderSize = 0;
+            this.btnRight.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRight.Image = global::ThickInspector.Properties.Resources.icon_right;
+            this.btnRight.Location = new System.Drawing.Point(1094, 0);
+            this.btnRight.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
+            this.btnRight.Name = "btnRight";
+            this.btnRight.Size = new System.Drawing.Size(43, 27);
+            this.btnRight.TabIndex = 4;
+            this.btnRight.UseVisualStyleBackColor = false;
+            this.btnRight.Click += new System.EventHandler(this.btnRight_Click);
+            // 
+            // btnLeft
+            // 
+            this.btnLeft.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnLeft.FlatAppearance.BorderSize = 0;
+            this.btnLeft.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLeft.Image = global::ThickInspector.Properties.Resources.icon_left;
+            this.btnLeft.Location = new System.Drawing.Point(75, 0);
+            this.btnLeft.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
+            this.btnLeft.Name = "btnLeft";
+            this.btnLeft.Size = new System.Drawing.Size(44, 27);
+            this.btnLeft.TabIndex = 5;
+            this.btnLeft.UseVisualStyleBackColor = true;
+            this.btnLeft.Click += new System.EventHandler(this.btnLeft_Click);
+            // 
+            // panel3D
+            // 
+            this.panel3D.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel3D.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel3D.Controls.Add(this.tbStep);
+            this.panel3D.Controls.Add(this.label3);
+            this.panel3D.Location = new System.Drawing.Point(3, 3);
+            this.panel3D.Name = "panel3D";
+            this.panel3D.Size = new System.Drawing.Size(1363, 156);
+            this.panel3D.TabIndex = 2;
+            // 
+            // tbStep
+            // 
+            this.tbStep.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.tbStep.Location = new System.Drawing.Point(39, 129);
+            this.tbStep.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tbStep.Name = "tbStep";
+            this.tbStep.Size = new System.Drawing.Size(45, 25);
+            this.tbStep.TabIndex = 1;
+            this.tbStep.Text = "10";
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(3, 132);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(32, 15);
+            this.label3.TabIndex = 0;
+            this.label3.Text = "Step";
+            // 
+            // panel2D
+            // 
+            this.panel2D.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel2D.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel2D.Location = new System.Drawing.Point(3, 196);
+            this.panel2D.Name = "panel2D";
+            this.panel2D.Size = new System.Drawing.Size(1363, 405);
+            this.panel2D.TabIndex = 3;
+            this.panel2D.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel2D_MouseDown);
+            this.panel2D.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel2D_MouseMove);
+            this.panel2D.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel2D_MouseUp);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -518,6 +561,7 @@
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Form1";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tblWhole.ResumeLayout(false);
             this.tblLeft.ResumeLayout(false);
@@ -526,13 +570,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.trkInspectPos)).EndInit();
             this.tblRightButton.ResumeLayout(false);
             this.tblRightButton.PerformLayout();
-            this.panel3D.ResumeLayout(false);
-            this.panel3D.PerformLayout();
             this.tblRight.ResumeLayout(false);
             this.tblLeftLower.ResumeLayout(false);
             this.tblLeftLower.PerformLayout();
             this.tblStatistics.ResumeLayout(false);
             this.tblStatistics.PerformLayout();
+            this.panel3D.ResumeLayout(false);
+            this.panel3D.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -570,6 +614,8 @@
         private DoubleBufferPanel panel3D;
         private DoubleBufferPanel panel2D;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lb_ttv;
+        private System.Windows.Forms.Label tbTTV;
     }
 }
 

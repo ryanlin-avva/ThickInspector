@@ -49,6 +49,7 @@ namespace ThickInspector
         public bool IsColorBar { get; set; }
         public float Elevation { get; set; }
         public float Azimuth { get; set; }
+        public bool FullScale { get; set; }
 
         public ChartStyle()
         {
@@ -66,6 +67,7 @@ namespace ThickInspector
             XLabel = "X";
             YLabel = "Y";
             ZLabel = "Z";
+            FullScale = false;
         }
 
         public ChartStyle ShallowCopy()

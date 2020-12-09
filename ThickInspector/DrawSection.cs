@@ -18,6 +18,8 @@ namespace ThickInspector
         public bool RawDisplay { get; set; }
         public bool NoZeroDisplay { get; set; }
         public bool FilteredDisplay { get; set; }
+        public float TTV { get; set; }
+        private bool isThick = false;
         public DrawSection(Panel p, ChartStyle cs3d) 
         {
             panel = p;
@@ -31,12 +33,14 @@ namespace ThickInspector
         {
             return cs;
         }
-        public void UpdateChartStyle(ChartStyle cs3d)
+        public void UpdateChartStyle(ChartStyle cs3d, bool measureThick)
         {
             //cs = cs3d.ShallowCopy();
             cs.XMax = cs3d.XMax;
             cs.XMin = cs3d.XMin;
             cs.XTick = (cs.XMax - cs.XMin) / Constants.Draw2DXTickNumber;
+            cs.FullScale = cs3d.FullScale;
+            isThick = measureThick;
         }
         public void CreateBase(Graphics g)
         {
@@ -73,11 +77,18 @@ namespace ThickInspector
                     if (pts[i].Y > temp_max)
                         temp_max = pts[i].Y;
                 }
-                cs.ZMin = (float)((int)(temp_min - Constants.Draw2DZAxisPadding));
-                if (cs.ZMin < 0) cs.ZMin = 0;
+                if (cs.FullScale)
+                {
+                    cs.ZMin = 0;
+                }
+                else
+                {
+                    cs.ZMin = (float)((int)(temp_min - Constants.Draw2DZAxisPadding));
+                    if (cs.ZMin < 0) cs.ZMin = 0;
+                }
+
                 cs.ZMax = temp_max + Constants.Draw2DZAxisPadding;
                 cs.ZTick = (cs.ZMax- cs.ZMin)/Constants.Draw2DZTickNumber;
-
                 CreateBase(g);
                 if (RawDisplay)
                     pts_raw = ds.GetOriDataSet(pos);
@@ -103,6 +114,18 @@ namespace ThickInspector
                             g.DrawLine(gpen, p1, p2);
                         }
                     }
+                }
+            }
+            float threshold = ds.Zmin;
+            TTV = ds.FindBottomTTV(pos, ref threshold);
+            if (isThick)
+            {
+                using (Pen tpen = new Pen(Color.Chocolate, 2))
+                {
+                    tpen.DashStyle = DashStyle.Dot;
+                    PointF p1 = Point2D(cs.XMax, threshold);
+                    PointF p2 = Point2D(cs.XMin, threshold);
+                    g.DrawLine(tpen, p1, p2);
                 }
             }
         }

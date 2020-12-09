@@ -128,6 +128,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="filter1.py" />
+    <None Include="Resources\diagram.jpg" />
+    <None Include="Resources\diagram1.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

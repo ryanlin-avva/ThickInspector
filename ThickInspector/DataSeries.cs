@@ -33,21 +33,42 @@ namespace ThickInspector
         public float Zdistance { get; set; }
         public float XBase { get; set; }
         public float YBase { get; set; }
+        public DataStyle DataLine { get; set; }
         public int EncoderZ;
         public int BaseZ;
         public bool ParallelDisplay { get; set; }
         public int Threshold = 120;
         public int CutoffFreq = 30;
+        public int Steps = 12;
+        public int Hi_lo_distance = 3;
+        public float HalfHeight = 0.8f;
 
         private List<int> zmaxIndexList;
         private List<int> zminIndexList;
         private int minIdx = 0;
         private int maxIdx = 0;
 
+        public DataSeries()
+        {
+            Xspacing = 5;
+            Yspacing = 50;
+            ColNumber = 20;
+            RowNumber = 40;
+            DataLine = new DataStyle();
+            zmaxIndexList = new List<int>();
+            zminIndexList = new List<int>();
+        }
         public void SetBaseZArray(int r, int c, float v)
         {
             baseData[r,c] = v;
         }
+        //Pure height measurement
+        public void SetZArray(int r, int c, float v)
+        {
+            oriData[r, c] = v;
+        }
+
+        //Substract corresponding base z to get thickness
         public void SetZArray(int r, int c, float v, int y)
         {
             int idx;
@@ -88,19 +109,6 @@ namespace ThickInspector
             if (nzData == null) return 0;
             return nzData[FindIndex(r), 0];
             //return p3Array[YCoor2DispIndex(r), 0].Z;
-        }
-
-        public DataStyle DataLine { get; set; }
-
-        public DataSeries()
-        {
-            Xspacing = 5;
-            Yspacing = 50;
-            ColNumber = 20;
-            RowNumber = 40;
-            DataLine = new DataStyle();
-            zmaxIndexList = new List<int>();
-            zminIndexList = new List<int>();
         }
 
         public void DataArrange(string datapath)
@@ -211,7 +219,7 @@ namespace ThickInspector
             }
         }
 
-        public void SaveNoneZeroData(string path)
+        private void SaveNoneZeroData(string path)
         {
             //try
             //{
@@ -246,7 +254,7 @@ namespace ThickInspector
             //}
 
         }
-        public void SaveP3Array(string path)
+        private void SaveP3Array(string path)
         {
             using (StreamWriter file = new StreamWriter(path))
             {
@@ -399,7 +407,58 @@ namespace ThickInspector
             }
             return data;
         }
-
+        public float FindBottomTTV(int idx, ref float target)
+        {
+            float temp_min = Zmax;
+            float temp_max = Zmin;
+            for (int i=0; i<nzData.GetLength(1); i++)
+            {
+                if (nzData[idx, i] > temp_max) temp_max = nzData[idx, i];
+                if (nzData[idx, i] < temp_min) temp_min = nzData[idx, i];
+            }
+            int[] hist = new int[Steps];
+            float step = GetHeightHistogram(nzData, idx, Steps, temp_max, temp_min, ref hist);
+            float range = step * HalfHeight;
+            List<int> sorted = new List<int>();
+            sorted.Add(0);
+            for (int i=1; i<hist.Length; i++)
+            {
+                int j = 0;
+                for (; j < i; j++) //large to small
+                {
+                    if (hist[sorted[j]] < hist[i])
+                    {
+                        sorted.Insert(j, i);
+                        break;
+                    }
+                }
+                if (j==i) sorted.Add(i);
+            }
+            int id = 1;
+            for (; id < hist.Length; id++)
+            {
+                if (Math.Abs(sorted[id] - sorted[0]) > Hi_lo_distance) {
+                    break;
+                }
+            }
+            if (id >= hist.Length)
+            {
+                target = temp_min;
+                return temp_min - temp_max;
+            }
+            target = (sorted[0] < sorted[id]) ? sorted[0] : sorted[id];
+            target = target*step + temp_min;
+            float max = temp_min;
+            for (int i=0; i< nzData.GetLength(1); i++)
+            {
+                if (Math.Abs(nzData[idx, i]-target) < range)
+                {
+                    if (nzData[idx, i] > max) max = nzData[idx, i];
+                }
+            }
+            target = target + range;
+            return max - temp_min;
+        }
         public PointF[] GetFilteredDataSet(int y, bool isIdx = false)
         {
             int idx = y;
@@ -412,6 +471,23 @@ namespace ThickInspector
                 data[i] = new PointF(XArray[i], lpfData[idx, i]);
             }
             return data;
+        }
+
+        private float GetHeightHistogram(float[,] data, int idx, int steps, float max, float min, ref int[] hist)
+        {
+            float step = (max - min) / (float)steps;
+            //hist = new int[steps];
+            for (int i = 1; i < steps; i++)
+            {
+                hist[i] = 0;
+            }
+            for (int i = 0; i < data.GetLength(1); i++)
+            {
+                int k = (int)((data[idx, i] - min) / step);
+                if (k >= steps) k = steps - 1;
+                hist[k]++;
+            }
+            return step;
         }
 
         //Find the index associated with value y

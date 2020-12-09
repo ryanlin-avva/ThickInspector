@@ -132,8 +132,6 @@ namespace ThickInspector
             {
                 for (int j = 0; j < len1; j++)
                 {
-                    if (pts[i, j].Z > 80 && pts[i,j].X==42)
-                        Debug.WriteLine("hello");
                     pts1[i, j] = new Point3(pts[i, j].X, pts[i, j].Y, pts[i, j].Z, 1);
                     pts[i, j].Transform(m, panel.Size, cs);
                 }
@@ -163,7 +161,8 @@ namespace ThickInspector
                     //g.DrawPolygon(apen, pta);
                 }
             }
-
+            if (cs.FullScale)
+                DrawCurtain(g, m, pts1, ds.Zmin, ds.Zmax);
             apen.Dispose();
             abrush.Dispose();
         }
@@ -171,9 +170,9 @@ namespace ThickInspector
         private void AddPartialSurface(Graphics g, DataSeries ds, Draw3DSkin skin3d
             , int pos1, int pos2)
         {
-            SolidBrush abrush = new SolidBrush(Color.AliceBlue);
-            Pen apen = new Pen(ds.DataLine.LineColor, ds.DataLine.Thickness);
-            apen.DashStyle = ds.DataLine.LineStyle;
+            //SolidBrush abrush = new SolidBrush(Color.AliceBlue);
+            //Pen apen = new Pen(ds.DataLine.LineColor, ds.DataLine.Thickness);
+            //apen.DashStyle = ds.DataLine.LineStyle;
 
             Matrix3 m = Matrix3.AzimuthElevation(cs.Elevation, cs.Azimuth);
             Point3[,] pts = ds.CloneDataSet();
@@ -215,8 +214,75 @@ namespace ThickInspector
                     //g.DrawPolygon(apen, pta);
                 }
             }
+        }
 
-            apen.Dispose();
+        //Draw curtain
+        private void DrawCurtain(Graphics g, Matrix3 m, Point3[,] pts1, float zmin, float zmax)
+        {
+            int lenC = pts1.GetLength(0) - 1;
+            Point3[] pt3 = new Point3[4];
+            for (int i = 0; i < lenC; i++)
+            {
+                int jj = 0;
+                if (cs.Elevation >= 0)
+                {
+                    if (cs.Azimuth >= -90 && cs.Azimuth <= 90)
+                        jj = lenC;
+                }
+                else
+                {
+                    if (cs.Azimuth < -90 && cs.Azimuth > 90)
+                        jj = lenC;
+                }
+                if (i < lenC)
+                {
+                    pt3[0] = new Point3(pts1[i, jj].X, pts1[i, jj].Y, pts1[i, jj].Z, 1);
+                    pt3[1] = new Point3(pts1[i + 1, jj].X, pts1[i + 1, jj].Y, pts1[i + 1, jj].Z, 1);
+                    pt3[2] = new Point3(pts1[i + 1, jj].X, pts1[i + 1, jj].Y, cs.ZMin, 1);
+                    pt3[3] = new Point3(pts1[i, jj].X, pts1[i, jj].Y, cs.ZMin, 1);
+
+                    DrawOneSideCurtain(g, pt3, m, zmin, zmax);
+                }
+            }
+            lenC = pts1.GetLength(1) - 1;
+            for (int j=0; j<lenC; j++)
+            {
+                int ii = 0;
+                if (cs.Elevation >= 0)
+                {
+                    if (cs.Azimuth >= 0 && cs.Azimuth <= 180)
+                        ii = lenC;
+                }
+                else
+                {
+                    if (cs.Azimuth >= -180 && cs.Azimuth <= 0)
+                        ii = lenC;
+                }
+                if (j < lenC)
+                {
+                    pt3[0] = new Point3(pts1[ii, j].X, pts1[ii, j].Y, pts1[ii, j].Z, 1); 
+                    pt3[1] = new Point3(pts1[ii, j + 1].X, pts1[ii, j + 1].Y, pts1[ii, j + 1].Z, 1); 
+                    pt3[2] = new Point3(pts1[ii, j + 1].X, pts1[ii, j + 1].Y, cs.ZMin, 1); 
+                    pt3[3] = new Point3(pts1[ii, j].X, pts1[ii, j].Y, cs.ZMin, 1);
+                    DrawOneSideCurtain(g, pt3, m, zmin, zmax);
+                }
+            }
+        }
+
+        private void DrawOneSideCurtain(Graphics g, Point3[] pt3, Matrix3 m, float zmin, float zmax)
+        {
+            PointF[] pta = new PointF[4];
+            SolidBrush abrush = new SolidBrush(Color.DarkBlue);
+
+            for (int k = 0; k < 4; k++)
+            {
+                pt3[k].Transform(m, panel.Size, cs);
+                pta[k] = new PointF(pt3[k].X, pt3[k].Y);
+            }
+            Color color;
+            color = AddColor(pt3[0], zmin, zmax);
+            abrush = new SolidBrush(color);
+            g.FillPolygon(abrush, pta);
             abrush.Dispose();
         }
 
@@ -375,6 +441,7 @@ namespace ThickInspector
             {
                 apen.StartCap = LineCap.RoundAnchor;
                 apen.EndCap = LineCap.RoundAnchor;
+                apen.DashStyle = DashStyle.Dot;
                 //apen.StartCap = LineCap.Flat;
                 //apen.EndCap = LineCap.ArrowAnchor;
                 g.DrawLine(apen, pts[0], pts[1]);

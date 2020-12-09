@@ -20,7 +20,8 @@ namespace ThickInspector
         private string initPath = null;
         private string paramFileName = "C:\\avva\\raptor.ini";
         private string paramFolderName = "C:\\avva";
-        private string baseFileName = "C:\\avva\\base.data";
+        public string BaseFileName { get; set; }
+        public bool MeasureThick = false;
         public string DataFolder { get; set; }
 
         private int CurrentInspectPos { get; set; }
@@ -30,7 +31,6 @@ namespace ThickInspector
 
         private float yBase;
         private int dl_num = 4;
-        private Point MousePos { get; set; }
 
         public Form1()
         {
@@ -150,6 +150,18 @@ namespace ThickInspector
                 tbGreenLength.Text = "(" + dl_array[2].LenStr + ", " + dl_array[3].LenStr + ")";
             else
                 tbGreenLength.Text = "                        ";
+            if (MeasureThick)
+            {
+                lb_ttv.Visible = true;
+                if (draw2.TTV < 0)
+                    MessageBox.Show("Thickness exclude threshold too small.\nPlease adjust parameters.");
+                tbTTV.Text = draw2.TTV.ToString(".##") + " um";
+            } 
+            else
+            {
+                lb_ttv.Visible = false;
+                tbTTV.Text = "            ";
+            }
         }
 
         private void panel3D_Resize(object sender, System.EventArgs e)
@@ -259,9 +271,9 @@ namespace ThickInspector
 
         private void LoadDataFile(string fname)
         {
-            //try
-            //{
-                if (ds.BaseZ==0)
+            try
+            {
+                if (MeasureThick && ds.BaseZ==0)
                 {
                     MessageBox.Show("Haven't set base data file yet!!");
                     return;
@@ -296,8 +308,9 @@ namespace ThickInspector
                         distance = Constants.DotDistance / 5;
                         xNumber = Constants.DotNumber * 5;
                     }
-                    if (dataRowNum > ds.BaseRowNumber 
-                        || xNumber > ds.BaseColNumber)
+                    if (MeasureThick 
+                        && (dataRowNum > ds.BaseRowNumber 
+                        || xNumber > ds.BaseColNumber))
                     {
                         MessageBox.Show("Base data area is smaller than sample");
                         return;
@@ -360,12 +373,26 @@ namespace ThickInspector
                         {
                             if (ds.ParallelDisplay)
                             {
-                                ds.SetZArray(z, i, data[z + 2], (int)data[0]);
+                                if (MeasureThick) //substract base
+                                {
+                                    ds.SetZArray(z, i, data[z + 2], (int)data[0]);
+                                }
+                                else
+                                {
+                                    ds.SetZArray(z, i, data[z + 2]);
+                                }
                                 ds.SetInsArray(z, i, data[z + 2 + xNumber]);
                             }
                             else
                             {
-                                ds.SetZArray(i, z, data[z + 2], (int)data[0]);
+                                if (MeasureThick) //substract base
+                                {
+                                    ds.SetZArray(i, z, data[z + 2], (int)data[0]);
+                                }
+                                else
+                                {
+                                    ds.SetZArray(i, z, data[z + 2]);
+                                }
                                 ds.SetInsArray(i, z, data[z + 2 + xNumber]);
                             }
                         }
@@ -383,16 +410,16 @@ namespace ThickInspector
                     }
                     panel3D.Invalidate();
                 }
-        //}
-        //    catch (Exception e)
-        //    {
-        //        MessageBox.Show(fname + " Open Fail: " + e.Message);
-        //    }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(fname + " Open Fail: " + e.Message);
+            }
         }
         private void LoadBaseFile(string fname)
         {
-            //try
-            //{
+            try
+            {
                 initPath = fname;
                 using (StreamReader file = new StreamReader(fname))
                 {
@@ -453,27 +480,35 @@ namespace ThickInspector
                                 + " Parsing Error, Total number = " + data.Length.ToString());
                             return;
                         }
-                        //Must set XArray value first
-                        //Otherwise ZArray will have zero in point.x value
+                        float sum = 0;
+                        for (int z = 0; z < xNumber; z++)
+                            sum += data[z + 2];
+                        sum = sum / xNumber;
                         for (int z = 0; z < xNumber; z++)
                         {
                             if (ds.ParallelDisplay)
-                            {
-                                ds.SetBaseZArray(z, i, data[z + 2]);
-                            }
+                                ds.SetBaseZArray(z, i, sum);
                             else
-                            {
-                                ds.SetBaseZArray(i, z, data[z + 2]);
-                            }
+                                ds.SetBaseZArray(i, z, sum);
                         }
+
+                        /*
+                        for (int z = 0; z < xNumber; z++)
+                        {
+                            if (ds.ParallelDisplay)
+                                ds.SetBaseZArray(z, i, data[z + 2]);
+                            else
+                                ds.SetBaseZArray(i, z, data[z + 2]);
+                        }
+                        */
                     }
                     ds.RemoveBaseZero();
                 }
-            //}
-            //catch (Exception e)
-            //{
-            //    MessageBox.Show(fname + " Open Fail: " + e.Message);
-            //}
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(fname + " Open Fail: " + e.Message);
+            }
         }
 
         private void SetDataProfile()
@@ -497,7 +532,7 @@ namespace ThickInspector
             if (cs3.ZMin < 0) cs3.ZMin = 0;
             cs3.ZMax = ds.Zmax + Constants.Draw3DZAxisPadding;
             cs3.ZTick = (cs3.ZMax - cs3.ZMin) / Constants.Draw3DZTickNumber;
-            draw2.UpdateChartStyle(cs3);
+            draw2.UpdateChartStyle(cs3, MeasureThick);
         }
 
         private void btnSavePic_Click(object sender, EventArgs e)
@@ -586,6 +621,26 @@ namespace ThickInspector
         {
             return ds.CutoffFreq.ToString();
         }
+
+        public bool is_fullScale()
+        {
+            return cs3.FullScale;
+        }
+
+        public int get_thick_distance()
+        {
+            return ds.Hi_lo_distance;
+        }
+
+        public float get_thick_half_height()
+        {
+            return ds.HalfHeight;
+        }
+
+        public int get_thick_steps()
+        {
+            return ds.Steps;
+        }
         private void btnSetParam_Click(object sender, EventArgs e)
         {
             using (Form2 f2 = new Form2())
@@ -594,21 +649,28 @@ namespace ThickInspector
                 f2.InitParam();
                 f2.ShowDialog();
                 ds.Threshold = f2.get_intensity_per();
+                ds.HalfHeight = f2.get_half_height();
+                ds.Steps = f2.get_divisions();
+                ds.Hi_lo_distance = f2.get_distance();
                 draw2.RawDisplay = f2.raw_data();
                 draw2.NoZeroDisplay = f2.nozero_displayed();
                 draw2.FilteredDisplay = f2.need_filter();
                 ds.CutoffFreq = f2.get_cutoff_freq();
                 DataFolder = f2.get_data_folder();
+                MeasureThick = f2.measure_thick();
+
                 string basefile = f2.get_basefilename();
-                if (basefile != baseFileName)
+                if (basefile != BaseFileName 
+                    || (!cs3.FullScale && cs3.FullScale!= f2.is_full_scale()))
                 {
                     LoadBaseFile(basefile);
-                    baseFileName = basefile;
+                    BaseFileName = basefile;
                 }
+                cs3.FullScale = f2.is_full_scale();
+                draw2.UpdateChartStyle(cs3, MeasureThick);
                 WriteParaFile();
                 panel3D.Invalidate();
             }
-
         }
 
         private void btnGreen_Click(object sender, EventArgs e)
@@ -643,7 +705,7 @@ namespace ThickInspector
         private void Form1_Load(object sender, EventArgs e)
         {
             ReadParaFile();
-            LoadBaseFile(baseFileName);
+            if (MeasureThick) LoadBaseFile(BaseFileName);
             var args = Environment.GetCommandLineArgs();
             if (args.Length > 1)
             {
@@ -668,7 +730,17 @@ namespace ThickInspector
                 outputFile.WriteLine(text);
                 text = "DataSavePath:" + DataFolder;
                 outputFile.WriteLine(text);
-                text = "BaseFileName:" + baseFileName;
+                text = "MeasureThick:" + MeasureThick.ToString();
+                outputFile.WriteLine(text);
+                text = "BaseFileName:" + BaseFileName;
+                outputFile.WriteLine(text);
+                text = "FullScale:" + cs3.FullScale.ToString();
+                outputFile.WriteLine(text);
+                text = "DivisionCount:" + ds.Steps.ToString();
+                outputFile.WriteLine(text);
+                text = "HiLoDistance:" + ds.Hi_lo_distance.ToString();
+                outputFile.WriteLine(text);
+                text = "HalfHeight:" + ds.HalfHeight.ToString();
                 outputFile.WriteLine(text);
             }
         }
@@ -681,8 +753,12 @@ namespace ThickInspector
                 ds.CutoffFreq = 30;
                 draw2.NoZeroDisplay = true;
                 draw2.RawDisplay = false;                
-                draw2.FilteredDisplay = false; 
+                draw2.FilteredDisplay = false;
+                MeasureThick = false;
                 DataFolder = paramFolderName;
+                //BaseFileName = "C:\\avva\\base.data";
+                BaseFileName = "";
+                cs3.FullScale = false;
                 return;
             }
             using (StreamReader file = new StreamReader(paramFileName))
@@ -712,10 +788,26 @@ namespace ThickInspector
                         case "DataSavePath":
                             DataFolder = dataLine.Substring(idx + 1);
                             break;
+                        case "MeasureThick":
+                            MeasureThick = Convert.ToBoolean(dataLine.Substring(idx + 1));
+                            break;
                         case "BaseFileName":
-                            baseFileName = dataLine.Substring(idx + 1);
+                            BaseFileName = dataLine.Substring(idx + 1);
+                            break;
+                        case "FullScale":
+                            cs3.FullScale = Convert.ToBoolean(dataLine.Substring(idx + 1));
+                            break;
+                        case "DivisionCount":
+                            ds.Steps = Convert.ToInt32(dataLine.Substring(idx + 1));
+                            break;
+                        case "HiLoDistance":
+                            ds.Hi_lo_distance = Convert.ToInt32(dataLine.Substring(idx + 1));
+                            break;
+                        case "HalfHeight":
+                            ds.HalfHeight = (float)Convert.ToDecimal(dataLine.Substring(idx + 1));
                             break;
                     }
+                    if (!MeasureThick) BaseFileName = "";
                 }
             }
         }

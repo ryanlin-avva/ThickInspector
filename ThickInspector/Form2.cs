@@ -18,8 +18,26 @@ namespace ThickInspector
             cbxFilter.Checked = ((Form1)fm1).IsFilteredDisplay();
             tb_intense.Text = ((Form1)fm1).get_threshold();
             tb_cutoff.Text = ((Form1)fm1).get_cutoff();
-            textBox1.Text = ((Form1)fm1).DataFolder;
+            txbDataFolder.Text = ((Form1)fm1).DataFolder;
+            txbBaseFile.Text = ((Form1)fm1).BaseFileName;
+            cbxThick.Checked = ((Form1)fm1).MeasureThick;
+            cbxFullScale.Checked = ((Form1)fm1).is_fullScale();
+            tb_division.Text = ((Form1)fm1).get_thick_steps().ToString();
+            tb_distance.Text = ((Form1)fm1).get_thick_distance().ToString();
+            tb_halfHeight.Text = ((Form1)fm1).get_thick_half_height().ToString();
+        }
 
+        public int get_divisions()
+        {
+            return int.Parse(tb_division.Text);
+        }
+        public int get_distance()
+        {
+            return int.Parse(tb_distance.Text);
+        }
+        public float get_half_height()
+        {
+            return float.Parse(tb_halfHeight.Text);
         }
         public int get_intensity_per()
         {
@@ -44,13 +62,23 @@ namespace ThickInspector
             return cbxFilter.Checked;
         }
 
+        public bool measure_thick()
+        {
+            return cbxThick.Checked;
+        }
+
+        public bool is_full_scale()
+        {
+            return cbxFullScale.Checked;
+        }
+
         public string get_data_folder()
         {
-            return textBox1.Text;
+            return txbDataFolder.Text;
         }
         public string get_basefilename()
         {
-            return textBox2.Text;
+            return txbBaseFile.Text;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -68,14 +96,14 @@ namespace ThickInspector
         {
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
-                textBox1.Text = folderBrowserDialog1.SelectedPath;
+                txbDataFolder.Text = folderBrowserDialog1.SelectedPath;
             }
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                textBox2.Text = openFileDialog1.FileName;
+                txbBaseFile.Text = openFileDialog1.FileName;
         }
     }
 }
